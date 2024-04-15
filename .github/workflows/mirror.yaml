@@ -71,3 +71,15 @@ jobs:
            docker tag ${{ env.DOCKER_IMAGES_FROM }} uswccr.ccs.tencentyun.com/${{ secrets.DOCKER_USERNAME }}/${{ env.PROJECT_NAME_REPO }}:${{ env.DOCKER_IMAGES_TAG }} ||true
            docker push uswccr.ccs.tencentyun.com/${{ secrets.DOCKER_USERNAME }}/${{ env.PROJECT_NAME_REPO }}:${{ env.DOCKER_IMAGES_TAG }} ||true
         shell: bash
+      - name: Dayly Artifact Cleanup
+        uses: jimschubert/delete-artifacts-action@v1
+        with:
+          log_level: 'error'
+          min_bytes: '0'
+      - name: Delete workflow runs
+        uses: Mattraks/delete-workflow-runs@v2
+        with:
+          retain_days: 0
+          keep_minimum_runs: 6
+      - name: Clean Up
+        uses: AutoModality/action-clean@v1
