@@ -9,8 +9,8 @@ on:
 
 env:
   PROJECT_NAME_REPO: "${GITHUB_REPOSITORY##*/}"
+  DOCKER_IMAGES_FROM: "ollama/ollama:latest"
   DOCKER_IMAGES_TAG: "latest"
-  DOCKER_IMAGES_FROM: "ollama/ollama:${{env.DOCKER_IMAGES_TAG}}"
 
 jobs:
   push_to_registries:
@@ -24,7 +24,10 @@ jobs:
         if: ( !cancelled() )
         run: |
            REF_NAME="${GITHUB_REPOSITORY##*/}"
-           echo "PROJECT_NAME_REPO=${REF_NAME}" >> "$GITHUB_ENV" 
+           echo "PROJECT_NAME_REPO=${REF_NAME}" >> "$GITHUB_ENV"
+           image_tag="${env.GITHUB_REPOSITORY##*:}"
+           echo "DOCKER_IMAGES_TAG=${image_tag}" >> "$GITHUB_ENV"
+
         shell: bash
 
       - name: Log in to Docker Hub
