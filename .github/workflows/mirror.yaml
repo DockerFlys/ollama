@@ -9,7 +9,8 @@ on:
 
 env:
   PROJECT_NAME_REPO: "${GITHUB_REPOSITORY##*/}"
-  DOCKER_IMAGES_FROM: "ollama/ollama:latest" 
+  DOCKER_IMAGES_TAG: "latest"
+  DOCKER_IMAGES_FROM: "ollama/ollama:${{DOCKER_IMAGES_TAG}}"
 
 jobs:
   push_to_registries:
@@ -59,5 +60,8 @@ jobs:
       - name: PULL and push Docker images
         if: ( !cancelled() )
         run: |
-           echo ${{ env.DOCKER_IMAGES_FROM }}
+           docker pull ${{ env.DOCKER_IMAGES_FROM }}
+           docker tag ${{ env.DOCKER_IMAGES_FROM }} ${{ secrets.DOCKER_USERNAME }}/${{ env.PROJECT_NAME_REPO }}:${{DOCKER_IMAGES_TAG}} ||true
+           docker tag ${{ env.DOCKER_IMAGES_FROM }} ccr.ccs.tencentyun.com/${{ secrets.DOCKER_USERNAME }}/${{ env.PROJECT_NAME_REPO }}:${{DOCKER_IMAGES_TAG}} ||true
+           docker tag ${{ env.DOCKER_IMAGES_FROM }} uswccr.ccs.tencentyun.com/${{ secrets.DOCKER_USERNAME }}/${{ env.PROJECT_NAME_REPO }}:${{DOCKER_IMAGES_TAG}} ||true
         shell: bash
