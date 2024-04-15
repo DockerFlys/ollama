@@ -25,7 +25,7 @@ jobs:
         run: |
            REF_NAME="${GITHUB_REPOSITORY##*/}"
            echo "PROJECT_NAME_REPO=${REF_NAME}" >> "$GITHUB_ENV"
-           image_tag="${env.GITHUB_REPOSITORY}"
+           image_tag="${env.DOCKER_IMAGES_FROM}"
            image_tag="${image_tag##*:}"
            echo "DOCKER_IMAGES_TAG=${image_tag}" >> "$GITHUB_ENV"
 
