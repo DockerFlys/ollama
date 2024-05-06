@@ -19,7 +19,8 @@ jobs:
     runs-on: self-hosted
     permissions:
       packages: write
-      contents: read
+      actions: write
+      contents: write
     steps:
       - name: GetRepoName
         if: ( !cancelled() )
@@ -99,7 +100,7 @@ jobs:
           tags: |
             ${{ env.BUILD_VERSION }}
             type=sha,enable=true,priority=100,prefix=sha-,suffix=,format=short
-            type=raw,value=action-{{branch}}-{{date 'YYYYMMDD-HHmmss' tz='Asia/Shanghai'}}
+            type=raw,value=action-{{branch}}-{{date 'YYYYMMDD' tz='Asia/Shanghai'}}
           flavor: |
             latest=true
           labels: |
@@ -134,15 +135,15 @@ jobs:
       #      docker push uswccr.ccs.tencentyun.com/${{ secrets.DOCKER_USERNAME }}/${{ env.PROJECT_NAME_REPO }}:${{ env.DOCKER_IMAGES_TAG }} ||true
       #   shell: bash
 
-      # - name: Dayly Artifact Cleanup
-      #   uses: jimschubert/delete-artifacts-action@v1
-      #   with:
-      #     log_level: 'error'
-      #     min_bytes: '0'
-      # - name: Delete workflow runs
-      #   uses: Mattraks/delete-workflow-runs@v2
-      #   with:
-      #     retain_days: 0
-      #     keep_minimum_runs: 6
-      # - name: Clean Up
-      #   uses: AutoModality/action-clean@v1
+      - name: Dayly Artifact Cleanup
+        uses: jimschubert/delete-artifacts-action@v1
+        with:
+          log_level: 'error'
+          min_bytes: '0'
+      - name: Delete workflow runs
+        uses: Mattraks/delete-workflow-runs@v2
+        with:
+          retain_days: 0
+          keep_minimum_runs: 6
+      - name: Clean Up
+        uses: AutoModality/action-clean@v1
